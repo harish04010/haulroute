@@ -1,0 +1,24 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    strategy:
+      matrix:
+        compiler: [g++, clang++]
+        sanitize: [OFF, ON]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DHAULROUTE_SANITIZE=${{ matrix.sanitize }} -DCMAKE_BUILD_TYPE=${{ matrix.sanitize == 'ON' && 'Debug' || 'Release' }}
+      - name: Build
+        run: cmake --build build -j
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+      - name: Smoke benchmark
+        if: matrix.sanitize == 'OFF'
+        run: ./build/haulroute bench --grid 120 --queries 200
