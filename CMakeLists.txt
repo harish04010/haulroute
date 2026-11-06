@@ -24,6 +24,9 @@ add_executable(haulroute_cli tools/haulroute.cpp)
 set_target_properties(haulroute_cli PROPERTIES OUTPUT_NAME haulroute)
 target_link_libraries(haulroute_cli PRIVATE haulroute)
 
+add_executable(haulroute_trace tools/trace.cpp)
+target_link_libraries(haulroute_trace PRIVATE haulroute)
+
 enable_testing()
 add_executable(haulroute_tests tests/test_main.cpp)
 target_link_libraries(haulroute_tests PRIVATE haulroute)

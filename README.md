@@ -1,5 +1,9 @@
 # Haulroute
 
+**Live demo:** https://haulroute.vercel.app (watch all four algorithms race on the same road network)
+
+![Search replay](docs/race_mid.png)
+
 A shortest-path engine for road networks in C++17, with four algorithms side by side: Dijkstra, bidirectional Dijkstra, A*, and Contraction Hierarchies. The same idea powers fast routing in map apps. Every answer is checked against plain Dijkstra, and the paths come back as real road segments, not just distances.
 
 No dependencies beyond a C++17 compiler and CMake.
@@ -73,3 +77,15 @@ Sanitizer build: `cmake -S . -B build-asan -DHAULROUTE_SANITIZE=ON -DCMAKE_BUILD
 - **Faster preprocessing.** Contracting independent sets of nodes in parallel, and reusing witness searches, would bring the 23 s down a lot.
 - **A binary format** for the preprocessed hierarchy, so it loads in milliseconds instead of being rebuilt.
 - **Python bindings** with pybind11, so the analytics projects can call the router directly.
+
+## Watching the searches
+
+Every search class has an optional `trace` vector. When it's set, each settled node is appended in order; when it's null (the default), the search does nothing extra, so the benchmarks above are unaffected.
+
+`haulroute_trace` runs all four algorithms on one route across an 80×80 grid and writes their visit orders, the route, and the node coordinates as JSON:
+
+```bash
+./build/haulroute_trace --grid 80 --seed 7 > site/trace.json
+```
+
+`site/index.html` replays them side by side. On that route, Dijkstra settles 6,241 of 6,400 intersections, bidirectional Dijkstra 5,617, A* 4,940, and contraction hierarchies 169. All four return the same 126-node route.

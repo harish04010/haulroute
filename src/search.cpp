@@ -39,6 +39,7 @@ QueryResult Dijkstra::run(NodeId s, NodeId t, bool want_path) {
         pq.pop();
         if (d > dist_.get(u)) continue;  // stale entry; we found a shorter way since
         ++r.settled;
+        if (trace) trace->push_back(u);
         if (u == t) {
             r.distance = static_cast<Weight>(d);
             break;
@@ -87,6 +88,7 @@ QueryResult BidirectionalDijkstra::run(NodeId s, NodeId t, bool want_path) {
         pq.pop();
         if (d > mine.get(u)) return;
         ++r.settled;
+        if (trace) trace->push_back(u);
         for (const Arc& a : g.out(u)) {
             std::uint64_t nd = d + a.weight;
             if (nd < mine.get(a.to)) {
@@ -162,6 +164,7 @@ QueryResult AStar::run(NodeId s, NodeId t, bool want_path) {
         Weight du = dist_.get(u);
         if (key > static_cast<std::uint64_t>(du) + estimate(u, t)) continue;
         ++r.settled;
+        if (trace) trace->push_back(u);
         if (u == t) {
             r.distance = du;
             break;

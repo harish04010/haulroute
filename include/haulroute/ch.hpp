@@ -74,6 +74,8 @@ class CHQuery {
 public:
     explicit CHQuery(const ContractionHierarchy& ch);
     QueryResult run(NodeId s, NodeId t, bool want_path = false);
+    // When set, every settled node is appended in order. Off by default; used to visualize searches.
+    std::vector<NodeId>* trace = nullptr;
 
 private:
     const ContractionHierarchy& ch_;

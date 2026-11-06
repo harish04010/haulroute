@@ -44,6 +44,8 @@ class Dijkstra {
 public:
     explicit Dijkstra(const Graph& g);
     QueryResult run(NodeId s, NodeId t, bool want_path = false);
+    // When set, every settled node is appended in order. Off by default; used to visualize searches.
+    std::vector<NodeId>* trace = nullptr;
 
 private:
     const Graph& g_;
@@ -57,6 +59,8 @@ class BidirectionalDijkstra {
 public:
     explicit BidirectionalDijkstra(const Graph& g);
     QueryResult run(NodeId s, NodeId t, bool want_path = false);
+    // When set, every settled node is appended in order. Off by default; used to visualize searches.
+    std::vector<NodeId>* trace = nullptr;
 
 private:
     const Graph& fwd_;
@@ -75,6 +79,8 @@ class AStar {
 public:
     explicit AStar(const Graph& g);
     QueryResult run(NodeId s, NodeId t, bool want_path = false);
+    // When set, every settled node is appended in order. Off by default; used to visualize searches.
+    std::vector<NodeId>* trace = nullptr;
     double weight_per_km() const { return factor_; }
 
 private:

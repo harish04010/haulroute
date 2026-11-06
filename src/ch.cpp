@@ -249,6 +249,7 @@ QueryResult CHQuery::run(NodeId s, NodeId t, bool want_path) {
         auto& theirs = forward ? dist_b_ : dist_f_;
         if (d > mine.get(u)) return;
         ++r.settled;
+        if (trace) trace->push_back(u);
         Weight other = theirs.get(u);
         if (other != kInf && d + other < best) {
             best = d + other;
